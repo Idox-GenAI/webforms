@@ -1,0 +1,69 @@
+export type FieldType =
+  | 'text'
+  | 'textarea'
+  | 'number'
+  | 'date'
+  | 'select'
+  | 'checkbox'
+  | 'radio';
+
+export type ValidationType = 'required' | 'min' | 'max' | 'pattern';
+
+export interface ValidationRule {
+  type: ValidationType;
+  value?: number | string;
+  message?: string;
+}
+
+export interface FieldOption {
+  label: string;
+  value: string;
+}
+
+export interface FieldSchema {
+  id: string;
+  type: FieldType;
+  name: string;
+  label: string;
+  placeholder?: string;
+  helpText?: string;
+  defaultValue?: string | number | boolean;
+  options?: FieldOption[];
+  validations?: ValidationRule[];
+}
+
+export interface ColumnSchema {
+  id: string;
+  span: 1 | 2 | 3 | 4;
+  fields: FieldSchema[];
+}
+
+export interface RowSchema {
+  id: string;
+  columns: ColumnSchema[];
+}
+
+export interface SectionSchema {
+  id: string;
+  title: string;
+  rows: RowSchema[];
+}
+
+export interface FormSchema {
+  id: string;
+  name: string;
+  description?: string;
+  version: number;
+  sections: SectionSchema[];
+}
+
+export type Selection =
+  | { type: 'form'; id: string }
+  | { type: 'section'; id: string }
+  | { type: 'row'; id: string }
+  | { type: 'field'; id: string };
+
+export const createId = () =>
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `id-${Math.random().toString(36).slice(2, 9)}`;
